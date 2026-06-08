@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cyberpunk Stopwatch</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="grid-bg"></div>
+
+<div class="themes">
+    <button class="blue" onclick="setTheme('blue')"></button>
+    <button class="purple" onclick="setTheme('purple')"></button>
+    <button class="green" onclick="setTheme('green')"></button>
+    <button class="red" onclick="setTheme('red')"></button>
+</div>
+
+<div class="container">
+
+    <h2>Cyberpunk Stopwatch</h2>
+
+    <div id="clock"></div>
+
+    <div class="ring">
+
+        <div id="particles"></div>
+
+        <svg width="300" height="300">
+            <circle class="bg" cx="150" cy="150" r="130"></circle>
+            <circle class="progress" cx="150" cy="150" r="130"></circle>
+        </svg>
+
+        <div id="display" class="time">
+            00:00:00.00
+        </div>
+
+    </div>
+
+    <div class="controls">
+
+        <button onclick="startStop()">▶</button>
+
+        <button onclick="lap()">⚑</button>
+
+        <button onclick="reset()">↺</button>
+
+        <button onclick="toggleFullscreen()">⛶</button>
+
+        <button onclick="exportLaps()">📥</button>
+
+    </div>
+
+    <h3>Laps</h3>
+
+    <ul id="laps"></ul>
+
+    <div class="shortcut-info">
+        Space = Start/Pause |
+        L = Lap |
+        R = Reset
+    </div>
+
+</div>
+
+<audio id="clickSound" src="click.mp3"></audio>
+
+<script src="script.js"></script>
+
+</body>
+</html>
