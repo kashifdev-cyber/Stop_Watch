@@ -1,22 +1,30 @@
-# ⏰ Digital Watch
+# ⏱️ Stopwatch App
 
-A modern, responsive **Digital Watch application** built with clean UI and real-time time updates.  
-This project displays the current time with a sleek interface and optional theme customization.
+A simple, fast, and responsive **Stopwatch Application** built using JavaScript.  
+It allows users to measure time with precision, featuring start, stop, and reset functionality.
 
 ---
 
 ## ✨ Features
 
-- ⏱️ Real-time digital clock (updates every second)
-- 🕒 12-hour / 24-hour format support
-- 📅 Displays date (optional feature)
-- 🌙 Light & Dark mode (or multiple themes)
-- 🎨 Clean and minimal UI design
-- 📱 Fully responsive for all devices
-- ⚡ Fast and lightweight
+- ⏱️ Start, Stop, and Reset stopwatch
+- 🕒 Millisecond-level accuracy
+- 📱 Fully responsive design
+- 🎨 Clean and minimal UI
+- ⚡ Smooth and real-time updates
+- 🧠 Lightweight and fast performance
 
 ---
 
 ## 🖥️ Demo
 
-👉 Live Demo:  
+👉 Live Demo:  https://kashifdev-cyber.github.io/Stop_Watch/
+
+
+---
+
+## 📸 Preview
+
+> Add screenshots of your stopwatch UI here:
+> 
+<img width="1006" height="846" alt="Capture" src="https://github.com/user-attachments/assets/50fac9be-8562-4f6b-aff5-d046c7d424a8" />
