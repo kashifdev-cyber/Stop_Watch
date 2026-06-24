@@ -1,79 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch</title>
 
-<title>Cyberpunk Stopwatch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-<div class="grid-bg"></div>
+    <div class="background-grid"></div>
 
-<div class="themes">
-    <button class="blue" onclick="setTheme('blue')"></button>
-    <button class="purple" onclick="setTheme('purple')"></button>
-    <button class="green" onclick="setTheme('green')"></button>
-    <button class="red" onclick="setTheme('red')"></button>
-</div>
-
-<div class="container">
-
-    <h2>Cyberpunk Stopwatch</h2>
-
-    <div id="clock"></div>
-
-    <div class="ring">
-
-        <div id="particles"></div>
-
-        <svg width="300" height="300">
-            <circle class="bg" cx="150" cy="150" r="130"></circle>
-            <circle class="progress" cx="150" cy="150" r="130"></circle>
-        </svg>
-
-        <div id="display" class="time">
-            00:00:00.00
-        </div>
-
+    <div class="theme-switcher">
+        <button class="theme theme--dark" onclick="setTheme('dark')"></button>
+        <button class="theme theme--amber" onclick="setTheme('amber')"></button>
+        <button class="theme theme--sage" onclick="setTheme('sage')"></button>
+        <button class="theme theme--ice" onclick="setTheme('ice')"></button>
     </div>
 
-    <div class="controls">
+    <main class="app">
 
-        <button onclick="startStop()">▶</button>
+        <header class="app__header">
+            <h1>Stopwatch</h1>
+            <p id="clock"></p>
+        </header>
 
-        <button onclick="lap()">⚑</button>
+        <section class="timer">
+            <div id="particles"></div>
 
-        <button onclick="reset()">↺</button>
+            <svg width="300" height="300">
+                <circle class="timer__bg" cx="150" cy="150" r="130"></circle>
+                <circle class="timer__progress" cx="150" cy="150" r="130"></circle>
+            </svg>
 
-        <button onclick="toggleFullscreen()">⛶</button>
+            <div id="display" class="timer__display">00:00:00.00</div>
+        </section>
 
-        <button onclick="exportLaps()">📥</button>
+        <section class="controls">
+            <button onclick="startStop()">▶</button>
+            <button onclick="lap()">⚑</button>
+            <button onclick="reset()">↺</button>
+            <button onclick="toggleFullscreen()">⛶</button>
+            <button onclick="exportLaps()">📥</button>
+        </section>
 
-    </div>
+        <section class="laps">
+            <h2>Laps</h2>
+            <ul id="laps"></ul>
+        </section>
 
-    <h3>Laps</h3>
+        <footer class="hint">
+            Space • Start/Pause | L • Lap | R • Reset
+        </footer>
 
-    <ul id="laps"></ul>
+    </main>
 
-    <div class="shortcut-info">
-        Space = Start/Pause |
-        L = Lap |
-        R = Reset
-    </div>
+    <audio id="clickSound" src="click.mp3"></audio>
 
-</div>
-
-<audio id="clickSound" src="click.mp3"></audio>
-
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
