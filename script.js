@@ -1,207 +1,158 @@
-const display = document.getElementById("display");
-const progress = document.querySelector(".progress");
-const laps = document.getElementById("laps");
-const sound = document.getElementById("clickSound");
+// =========================
+// Stopwatch App Controller
+// =========================
 
-const circumference = 817;
+const StopwatchApp = (() => {
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval = null;
+    let running = false;
+    let laps = [];
 
-let timer = null;
-let running = false;
-let elapsed = 0;
-let startTime = 0;
+    // DOM cache
+    const dom = {
+        display: document.getElementById("display"),
+        laps: document.getElementById("laps"),
+        progress: document.querySelector(".timer__progress"),
+        click: document.getElementById("clickSound")
+    };
 
-for(let i=0;i<30;i++){
+    // =========================
+    // Time formatting
+    // =========================
+    const formatTime = (ms) => {
+        const milliseconds = Math.floor((ms % 1000) / 10);
+        const seconds = Math.floor((ms / 1000) % 60);
+        const minutes = Math.floor((ms / (1000 * 60)) % 60);
+        const hours = Math.floor(ms / (1000 * 60 * 60));
 
-    const p = document.createElement("span");
+        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}.${pad(milliseconds)}`;
+    };
 
-    p.classList.add("particle");
+    const pad = (n) => n.toString().padStart(2, "0");
 
-    p.style.left = Math.random()*100+"%";
-    p.style.top = Math.random()*100+"%";
-    p.style.animationDelay =
-    Math.random()*3+"s";
+    // =========================
+    // Core timer logic
+    // =========================
+    const start = () => {
+        if (running) return;
 
-    document
-    .getElementById("particles")
-    .appendChild(p);
-}
+        running = true;
+        startTime = Date.now() - elapsedTime;
 
-function playSound(){
+        timerInterval = setInterval(() => {
+            elapsedTime = Date.now() - startTime;
+            updateUI();
+        }, 10);
+    };
 
-    sound.currentTime = 0;
+    const stop = () => {
+        running = false;
+        clearInterval(timerInterval);
+    };
 
-    sound.play().catch(()=>{});
-}
+    const reset = () => {
+        stop();
+        elapsedTime = 0;
+        laps = [];
+        renderLaps();
+        updateUI();
+        updateProgress(0);
+    };
 
-function update(){
+    const toggle = () => {
+        running ? stop() : start();
+        playClick();
+    };
 
-    elapsed = Date.now() - startTime;
+    const addLap = () => {
+        if (!running) return;
 
-    let ms =
-    Math.floor((elapsed%1000)/10);
+        laps.unshift(formatTime(elapsedTime));
+        renderLaps();
+        playClick();
+    };
 
-    let sec =
-    Math.floor(elapsed/1000)%60;
+    // =========================
+    // UI updates
+    // =========================
+    const updateUI = () => {
+        dom.display.textContent = formatTime(elapsedTime);
+        updateProgress(elapsedTime);
+    };
 
-    let min =
-    Math.floor(elapsed/60000)%60;
+    const updateProgress = (ms) => {
+        const cycle = 60 * 1000; // 1 minute cycle for ring animation
+        const offset = 817 - ((ms % cycle) / cycle) * 817;
+        dom.progress.style.strokeDashoffset = offset;
+    };
 
-    let hr =
-    Math.floor(elapsed/3600000);
+    const renderLaps = () => {
+        dom.laps.innerHTML = laps
+            .map((lap, i) => `<li>Lap ${laps.length - i}: ${lap}</li>`)
+            .join("");
+    };
 
-    display.textContent =
-    `${String(hr).padStart(2,"0")}:`+
-    `${String(min).padStart(2,"0")}:`+
-    `${String(sec).padStart(2,"0")}.`+
-    `${String(ms).padStart(2,"0")}`;
+    const playClick = () => {
+        dom.click.currentTime = 0;
+        dom.click.play();
+    };
 
-    const offset =
-    circumference -
-    ((sec+ms/100)/60)*circumference;
+    // =========================
+    // Export
+    // =========================
+    const exportLaps = () => {
+        const data = laps.join("\n");
+        const blob = new Blob([data], { type: "text/plain" });
 
-    progress.style.strokeDashoffset =
-    offset;
-}
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
 
-function startStop(){
+        a.href = url;
+        a.download = "laps.txt";
+        a.click();
 
-    playSound();
+        URL.revokeObjectURL(url);
+    };
 
-    if(!running){
+    // =========================
+    // Public API
+    // =========================
+    return {
+        startStop: toggle,
+        reset,
+        lap: addLap,
+        exportLaps
+    };
+})();
 
-        startTime =
-        Date.now() - elapsed;
+// =========================
+// Global bindings (HTML buttons)
+// =========================
+const startStop = StopwatchApp.startStop;
+const reset = StopwatchApp.reset;
+const lap = StopwatchApp.lap;
+const exportLaps = StopwatchApp.exportLaps;
 
-        timer =
-        setInterval(update,10);
-
-        running=true;
-
-    }else{
-
-        clearInterval(timer);
-
-        running=false;
-    }
-}
-
-function lap(){
-
-    playSound();
-
-    if(elapsed===0) return;
-
-    const li =
-    document.createElement("li");
-
-    li.textContent =
-    display.textContent;
-
-    laps.prepend(li);
-
-    localStorage.setItem(
-        "laps",
-        laps.innerHTML
-    );
-}
-
-function reset(){
-
-    playSound();
-
-    clearInterval(timer);
-
-    running=false;
-
-    elapsed=0;
-
-    display.textContent =
-    "00:00:00.00";
-
-    progress.style.strokeDashoffset =
-    circumference;
-
-    laps.innerHTML="";
-
-    localStorage.removeItem("laps");
-}
-
-function exportLaps(){
-
-    const text =
-    [...document.querySelectorAll("#laps li")]
-    .map(li=>li.textContent)
-    .join("\n");
-
-    const blob =
-    new Blob([text]);
-
-    const link =
-    document.createElement("a");
-
-    link.href =
-    URL.createObjectURL(blob);
-
-    link.download =
-    "laps.txt";
-
-    link.click();
-}
-
-function toggleFullscreen(){
-
-    if(!document.fullscreenElement){
-
-        document.documentElement
-        .requestFullscreen();
-
-    }else{
-
+// Fullscreen helper (clean + safe)
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else {
         document.exitFullscreen();
     }
 }
 
-function setTheme(theme){
+// Theme switch (simple but structured)
+function setTheme(theme) {
+    const root = document.documentElement;
 
-    const colors={
-        blue:"#00e5ff",
-        purple:"#b026ff",
-        green:"#00ff88",
-        red:"#ff355e"
+    const themes = {
+        dark: "rgb(31, 21, 12)",
+        amber: "rgb(225, 220, 201)",
+        sage: "rgb(66, 132, 117)",
+        ice: "rgb(114, 136, 174)"
     };
 
-    document.documentElement
-    .style
-    .setProperty(
-        "--accent",
-        colors[theme]
-    );
+    root.style.setProperty("--accent", themes[theme] || themes.dark);
 }
-
-document.addEventListener(
-"keydown",
-e=>{
-
-    if(e.code==="Space"){
-
-        e.preventDefault();
-
-        startStop();
-    }
-
-    if(e.key==="l") lap();
-
-    if(e.key==="r") reset();
-});
-
-setInterval(()=>{
-
-document.getElementById("clock")
-.textContent =
-new Date()
-.toLocaleTimeString();
-
-},1000);
-
-laps.innerHTML =
-localStorage.getItem("laps") || "";
