@@ -218,3 +218,45 @@ button:hover {
         opacity: 0;
     }
 }
+
+@media (max-width: 600px) {
+
+    .app {
+        width: 92%;
+        padding: 18px;
+    }
+
+    .timer {
+        width: 240px;
+        height: 240px;
+    }
+
+    svg {
+        width: 240px;
+        height: 240px;
+    }
+
+    .timer__display {
+        font-size: 22px;
+    }
+
+    button {
+        width: 46px;
+        height: 46px;
+        font-size: 16px;
+    }
+
+    .controls {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    #laps {
+        max-height: 140px;
+    }
+
+    .theme-switcher {
+        top: 10px;
+        right: 10px;
+    }
+}
